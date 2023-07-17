@@ -1,0 +1,42 @@
+import openai
+import tkinter as tk
+from tkinter import messagebox
+
+openai.api_key = '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'
+
+def translate_to_french():
+    english_text = text_entry.get()
+    
+    try:
+        response = openai.Completion.create(
+            engine="text-davinci-004",
+            prompt=f"Translate the following English text to French: '{english_text}'",
+            max_tokens=60
+        )
+        translation = response.choices[0].text.strip()
+        result_label.config(text=f"Translation: {translation}")
+    except openai.api_resources.completion.CompletionError as e:
+        messagebox.showerror("Translation Error", f"API request failed: {e}")
+    except Exception as e:
+        messagebox.showerror("Unexpected Error", str(e))
+
+root = tk.Tk()
+root.title("Eccentric English to French Translator")
+
+welcome_label = tk.Label(root, text="Welcome to the Eccentric English to French Translator!")
+welcome_label.pack()
+
+instruction_label = tk.Label(root, text="Enter your English text below:")
+instruction_label.pack()
+
+text_entry = tk.Entry(root, width=50)
+text_entry.pack()
+
+translate_button = tk.Button(root, text="Translate", command=translate_to_french)
+translate_button.pack()
+
+result_label = tk.Label(root, text="")
+result_label.pack()
+
+root.mainloop()
+
